@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllCountries, searchCountries } from "../services/countryService";
 import CountryModal from "../components/CountryModal";
-import "../App.css";
 
 function CountriesPage() {
   const [countries, setCountries] = useState([]);
@@ -15,7 +14,7 @@ function CountriesPage() {
       const response = await getAllCountries();
       setCountries(response.data);
     } catch (error) {
-      console.error("Error loading countries:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -38,7 +37,7 @@ function CountriesPage() {
         setCountries(response.data);
       }
     } catch (error) {
-      console.error("Error searching countries:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -46,63 +45,44 @@ function CountriesPage() {
 
   return (
     <div className="page-container">
-      <div className="content-card">
-        <h1 className="title">Countries Explorer</h1>
-        <p className="subtitle">Search and view country details</p>
-
+      <div className="card">
+        <h1>Countries Explorer</h1>
+        <p>Browse countries, search instantly, and view details in a clean popup.</p>
         <input
           type="text"
-          placeholder="Search by country name..."
+          placeholder="Search country..."
           value={searchText}
           onChange={handleSearch}
           className="search-input"
         />
 
         {loading ? (
-          <p className="status-text">Loading countries...</p>
+          <p>Loading...</p>
         ) : (
-          <div className="table-wrapper">
-            <table className="countries-table">
-              <thead>
-                <tr>
-                  <th>Flag</th>
-                  <th>Name</th>
-                  <th>Capital</th>
-                  <th>Region</th>
-                  <th>Population</th>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Flag</th>
+                <th>Name</th>
+                <th>Capital</th>
+                <th>Region</th>
+                <th>Population</th>
+              </tr>
+            </thead>
+            <tbody>
+              {countries.map((c, i) => (
+                <tr key={i} onClick={() => setSelectedCountry(c)}>
+                  <td>
+                    <img src={c.flag} alt="" className="flag" />
+                  </td>
+                  <td>{c.name}</td>
+                  <td>{c.capital}</td>
+                  <td>{c.region}</td>
+                  <td>{c.population?.toLocaleString()}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {countries.length > 0 ? (
-                  countries.map((country, index) => (
-                    <tr
-                      key={index}
-                      onClick={() => setSelectedCountry(country)}
-                      className="table-row"
-                    >
-                      <td>
-                        <img
-                          src={country.flag}
-                          alt={country.name}
-                          className="flag-image"
-                        />
-                      </td>
-                      <td>{country.name}</td>
-                      <td>{country.capital || "N/A"}</td>
-                      <td>{country.region || "N/A"}</td>
-                      <td>{country.population?.toLocaleString()}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="no-data">
-                      No countries found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         )}
 
         <CountryModal
@@ -114,4 +94,4 @@ function CountriesPage() {
   );
 }
 
-export default CountriesPage;
+export default CountriesPage; 

@@ -1,11 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/countries";
+const API = "http://localhost:8080/countries";
 
-export const getAllCountries = () => {
-  return axios.get(API_URL);
-};
+export const getAllCountries = () => axios.get(API);
 
-export const searchCountries = (name) => {
-  return axios.get(`${API_URL}/search?name=${encodeURIComponent(name)}`);
-};
+export const searchCountries = (name) =>
+  axios.get(`${API}/search?name=${encodeURIComponent(name)}`);
